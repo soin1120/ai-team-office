@@ -53,7 +53,7 @@ if ($text -notmatch "(?m)^## v$([regex]::Escape($new))\b") {
 
 # 4) 커밋·태그 (빌드보다 먼저 해야 exe에 커밋 번호가 깨끗하게 들어감)
 Invoke-Git add -A | Out-Null
-Invoke-Git commit -q -m "release: v$new" | Out-Null
+Invoke-Git commit -q --allow-empty -m "release: v$new" | Out-Null
 Invoke-Git tag -a "v$new" -m "v$new" | Out-Null
 
 # 5) 빌드 (실행 중이면 끄고 → 빌드 → 다시 켬) · 압축
