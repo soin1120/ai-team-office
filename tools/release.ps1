@@ -70,7 +70,9 @@ if ($Publish) {
   $notesFile = Join-Path $env:TEMP "aiteam-notes-$new.md"
   [IO.File]::WriteAllText($notesFile, $(if ($m.Success) { $m.Groups[1].Value.Trim() } else { "v$new" }), $utf8)
   & git.exe push origin main; & git.exe push origin "v$new"
-  & gh release create "v$new" $zip --repo $repo --title "v$new" --notes-file $notesFile
+  # GitHub는 파일 이름의 한글을 지우므로 영문 이름으로 올린다
+  $asset = Join-Path $env:TEMP "AITeamOffice-v$new.zip"; Copy-Item $zip $asset -Force
+  & gh release create "v$new" $asset --repo $repo --title "v$new" --notes-file $notesFile
   if ($LASTEXITCODE -eq 0) { Write-Host "GitHub 릴리스 v$new 올림: https://github.com/$repo/releases/tag/v$new" } else { Write-Host "GitHub에 올리지 못했어요 (gh 로그인 계정·저장소를 확인해 주세요)" }
 }
 $app = Split-Path $root -Parent
